@@ -26,6 +26,7 @@ Office.onReady();
  * @param {Office.AddinCommands.Event} event The OnNewMessageCompose or OnNewAppointmentOrganizer event object.
  */
 function onItemComposeHandler(event) {
+  debugger
   Office.context.mailbox.masterCategories.getAsync(
     { asyncContext: event },
     (asyncResult) => {
@@ -74,6 +75,7 @@ function onItemComposeHandler(event) {
  * @param {Office.AddinCommands.Event} event The OnMessageSend or OnAppointmentSend event object.
  */
 function onItemSendHandler(event) {
+  debugger
   Office.context.mailbox.item.subject.getAsync(
     { asyncContext: event },
     (asyncResult) => {
