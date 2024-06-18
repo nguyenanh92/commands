@@ -74,7 +74,6 @@ function onItemComposeHandler(event) {
  * @param {Office.AddinCommands.Event} event The OnMessageSend or OnAppointmentSend event object.
  */
 function onItemSendHandler(event) {
-  debugger
   Office.context.mailbox.item.subject.getAsync(
     { asyncContext: event },
     (asyncResult) => {

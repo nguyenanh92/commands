@@ -1,382 +1,135 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<OfficeApp
-	xmlns="http://schemas.microsoft.com/office/appforoffice/1.1"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0"
-	xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
-	<Id>54abccb0-533f-4f37-9b9e-b4834331f0b3</Id>
-	<Version>1.0.0.4</Version>
-	<ProviderName>Contoso</ProviderName>
-	<DefaultLocale>en-US</DefaultLocale>
-	<DisplayName DefaultValue="Office-Addin-OP"/>
-	<Description DefaultValue="A template to get started."/>
-	<IconUrl DefaultValue="https://localhost:3000/assets/icon-64.png"/>
-	<HighResolutionIconUrl DefaultValue="https://localhost:3000/assets/icon-128.png"/>
-	<SupportUrl DefaultValue="https://www.contoso.com/help"/>
-	<AppDomains>
-		<AppDomain>https://localhost:3000</AppDomain>
-	</AppDomains>
-	<Hosts>
-		<Host Name="Mailbox"/>
-	</Hosts>
-	<Requirements>
-		<Sets>
-			<Set Name="Mailbox" MinVersion="1.1"/>
-		</Sets>
-	</Requirements>
-	<FormSettings>
-		<Form xsi:type="ItemRead">
-			<DesktopSettings>
-				<SourceLocation DefaultValue="https://localhost:3000/" />
-				<RequestedHeight>450</RequestedHeight>
-			</DesktopSettings>
-			<TabletSettings>
-				<SourceLocation DefaultValue="https://localhost:3000/" />
-				<RequestedHeight>250</RequestedHeight>
-			</TabletSettings>
-			<PhoneSettings>
-				<SourceLocation DefaultValue="https://localhost:3000/" />
-			</PhoneSettings>
-		</Form>
-		<Form xsi:type="ItemEdit">
-			<DesktopSettings>
-				<SourceLocation DefaultValue="https://localhost:3000/" />
-			</DesktopSettings>
-			<TabletSettings>
-				<SourceLocation DefaultValue="https://localhost:3000/" />
-			</TabletSettings>
-			<PhoneSettings>
-				<SourceLocation DefaultValue="https://localhost:3000/" />
-			</PhoneSettings>
-		</Form>
-	</FormSettings>
-	<Permissions>ReadWriteMailbox</Permissions>
-	<Rule xsi:type="RuleCollection" Mode="Or">
-		<Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Edit" />
-		<Rule xsi:type="ItemHasRegularExpressionMatch" RegExName="ReplyLinkRegex"
-			RegExValue="ReplyLink=.*_endLink" PropertyName="BodyAsHTML" /></Rule>
-	<VersionOverrides
-		xmlns="http://schemas.microsoft.com/office/mailappversionoverrides"
-		xsi:type="VersionOverridesV1_0">
-		<VersionOverrides
-			xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1"
-			xsi:type="VersionOverridesV1_1">
-			<Description resid="residDescription" />
-			<Requirements>
-				<bt:Sets DefaultMinVersion="1.4">
-					<bt:Set Name="MailBox" />
-				</bt:Sets>
-			</Requirements>
-			<Hosts>
-				<Host xsi:type="MailHost">
-					<!-- Event-based activation happens in a lightweight runtime.-->
-					<Runtimes>
-						<!-- HTML file including reference to or inline JavaScript event handlers.
-							   This is used by Outlook on the web and on the new Mac UI. -->
-						<Runtime resid="WebViewRuntime.Url">
-							<!-- JavaScript file containing event handlers. This is used by Outlook
-							on Windows. -->
-							<Override type="javascript" resid="JSRuntime.Url" />
-						</Runtime>
-					</Runtimes>
-					<DesktopFormFactor>
-						<SupportsSharedFolders>true</SupportsSharedFolders>
-						<FunctionFile resid="Commands.Url" />
-						<ExtensionPoint xsi:type="AppointmentOrganizerCommandSurface">
-							<OfficeTab id="TabDefault">
-								<Group id="apptComposeGroup">
-									<Label resid="lblGroupLabel"/>
-									<Control xsi:type="Button" id="apptComposeBtn">
-										<Label resid="apptComposeBtnLbl"/>
-										<Supertip>
-											<Title resid="apptComposeSuperTip" />
-											<Description resid="apptComposeDesc" />
-										</Supertip>
-										<Icon>
-											<bt:Image size="16" resid="Icon.16x16"/>
-											<bt:Image size="32" resid="Icon.32x32"/>
-											<bt:Image size="80" resid="Icon.80x80"/>
-										</Icon>
-										<Action xsi:type="ShowTaskpane">
-											<SourceLocation resid="apptComposeUrl" />
-										</Action>
-									</Control>
-								</Group>
-							</OfficeTab>
-						</ExtensionPoint>
-						<ExtensionPoint xsi:type="MessageReadCommandSurface">
-							<OfficeTab id="TabDefault">
-								<Group id="msgReadResourceCentralGroup">
-									<Label resid="lblGroupLabel" />
-									<!-- Function (UI-less) button -->
-									<Control xsi:type="Button" id="msgReadMyMeetingButton">
-										<Label resid="lblMyMeeting" />
-										<Supertip>
-											<Title resid="myMeetingSuperTipTitle" />
-											<Description resid="myMeetingSuperTipDescription" />
-										</Supertip>
-										<Icon>
-											<bt:Image size="16" resid="Icon.16x16"/>
-											<bt:Image size="32" resid="Icon.32x32"/>
-											<bt:Image size="80" resid="Icon.80x80"/>
-										</Icon>
-										<Action xsi:type="ShowTaskpane">
-											<SourceLocation resid="myMeetingsUrl" />
-										</Action>
-										<!--<Action
-										xsi:type="ExecuteFunction"><FunctionName>rcCommands.openMyMeeting</FunctionName></Action>-->
-									</Control>
-								</Group>
-							</OfficeTab>
-						</ExtensionPoint>
-						<ExtensionPoint xsi:type="CustomPane">
-							<RequestedHeight>450</RequestedHeight>
-							<SourceLocation resid="customPaneUrl" />
-							<Rule xsi:type="RuleCollection" Mode="And">
-								<Rule xsi:type="ItemIs" ItemType="Message" />
-								<Rule xsi:type="ItemHasRegularExpressionMatch"
-									RegExName="ReplyLinkRegex"
-									RegExValue="RCParamsStart=.*_RCParamsEnd"
-									PropertyName="BodyAsHTML" /></Rule>
-						</ExtensionPoint>
-						<ExtensionPoint xsi:type="LaunchEvent">
-							<LaunchEvents>
-								<LaunchEvent Type="OnAppointmentSend"
-									FunctionName="onAppointmentSendHandler" SendMode="PromptUser" />
-							</LaunchEvents>
-							<!-- Identifies the runtime to be used (also referenced by the Runtime
-							element). -->
-							<SourceLocation resid="WebViewRuntime.Url" />
-						</ExtensionPoint>
-					</DesktopFormFactor>
-				</Host>
-			</Hosts>
-			<Resources>
-				<bt:Images>
-					<bt:Image id="Icon.16x16" DefaultValue="https://localhost:3000/assets/icon-16.png"/>
-					<bt:Image id="Icon.32x32" DefaultValue="https://localhost:3000/assets/icon-32.png"/>
-					<bt:Image id="Icon.80x80" DefaultValue="https://localhost:3000/assets/icon-80.png"/>
-				</bt:Images>
-				<bt:Urls>
-					<bt:Url id="functionFile"
-						DefaultValue="https://localhost:3000/ResourceCentral/OfficeAddin/Functions/FunctionFile.html" />
-					<bt:Url id="apptComposeUrl" DefaultValue="https://localhost:3000/add-in/" />
-					<bt:Url id="customPaneUrl"
-						DefaultValue="https://localhost:3000/ResourceCentral/OfficeAddIn/EditOrder" />
-					<bt:Url id="myMeetingsUrl"
-						DefaultValue="https://localhost:3000/ResourceCentral/OfficeAddin/MyMeetings?version=1.11.0" />
-					<bt:Url id="JSRuntime.Url"
-						DefaultValue="https://localhost:3000/commands.js" />
-					<bt:Url id="WebViewRuntime.Url"
-						DefaultValue="https://localhost:3000/commands.html" />
-				</bt:Urls>
-				<bt:ShortStrings>
-					<bt:String id="GroupLabel" DefaultValue="Contoso Add-in"/>
-					<bt:String id="TaskpaneButton.Label" DefaultValue="Show Taskpane"/>
-					<bt:String id="lblGroupLabel" DefaultValue="Booking App OP POC" />
-					<bt:String id="apptComposeBtnLbl" DefaultValue="Resource Finder Add-in Preview">
-						<bt:Override Locale="da-dk" Value="Resource Finder Add-in" />
-						<bt:Override Locale="de-de" Value="Resource Finder Add-in" />
-						<bt:Override Locale="es-es" Value="Resource Finder Add-in" />
-						<bt:Override Locale="fi-fi" Value="Resource Finder Add-in" />
-						<bt:Override Locale="fr-fr" Value="Resource Finder Add-in" />
-						<bt:Override Locale="it-it" Value="Resource Finder Add-in" />
-						<bt:Override Locale="ja-jp" Value="リソースファインダ Add-in" />
-						<bt:Override Locale="ko-kr" Value="리소스 검색기 Add-in" />
-						<bt:Override Locale="nb-no" Value="Resource Finder Add-in" />
-						<bt:Override Locale="nl-nl" Value="Resource Finder Add-in" />
-						<bt:Override Locale="pt-pt" Value="Resource Finder Add-in" />
-						<bt:Override Locale="ru-ru" Value="Поиск ресурсов Add-in" />
-						<bt:Override Locale="sv-se" Value="Resource Finder Add-in" />
-						<bt:Override Locale="zh-cn" Value="Resource Finder Add-in" />
-						<bt:Override Locale="pl-PL" Value="Resource Finder Add-in" />
-						<bt:Override Locale="cs-CZ" Value="Resource Finder Add-in" />
-					</bt:String>
-					<bt:String id="apptComposeSuperTip"
-						DefaultValue="Resource Finder for Resource Central">
-						<bt:Override Locale="da-dk" Value="Resource Finder til Resource Central" />
-						<bt:Override Locale="de-de" Value="Resource Finder für Resource Central" />
-						<bt:Override Locale="es-es" Value="Resource Finder para Resource Central" />
-						<bt:Override Locale="fi-fi" Value="Resource Centralin Resource Finder" />
-						<bt:Override Locale="fr-fr" Value="Resource Finder for Resource Central" />
-						<bt:Override Locale="it-it" Value="Resource Finder per Resource Central" />
-						<bt:Override Locale="ja-jp" Value="Resource Finder for Resource Central" />
-						<bt:Override Locale="ko-kr" Value="Resource Central용 리소스 검색기" />
-						<bt:Override Locale="nb-no" Value="Resource Finder for Resource Central" />
-						<bt:Override Locale="nl-nl" Value="Resource Finder voor Resource Central" />
-						<bt:Override Locale="pt-pt" Value="Resource Finder para Resource Central" />
-						<bt:Override Locale="ru-ru"
-							Value="Поиск ресурсов для портала Resource Central" />
-						<bt:Override Locale="sv-se" Value="Resource Finder för Resource Central" />
-						<bt:Override Locale="zh-cn" Value="资源中心的 Resource Finder" />
-						<bt:Override Locale="pl-PL" Value="Resource Finder for Resource Central" />
-						<bt:Override Locale="cs-CZ" Value="Resource Finder for Resource Central" />
-					</bt:String>
-					<bt:String id="lblMyMeeting" DefaultValue="My Meetings Add-in Preview">
-						<bt:Override Locale="da-dk" Value="Mine Møder Add-in" />
-						<bt:Override Locale="de-de" Value="Meine Besprechungen Add-in" />
-						<bt:Override Locale="es-es" Value="Mis reuniones Add-in" />
-						<bt:Override Locale="fi-fi" Value="Omat kokoukset Add-in" />
-						<bt:Override Locale="fr-fr" Value="Mes Réunions Add-in" />
-						<bt:Override Locale="it-it" Value="My Meetings Add-in" />
-						<bt:Override Locale="ja-jp" Value="マイミーティング Add-in" />
-						<bt:Override Locale="ko-kr" Value="내 모임 Add-in" />
-						<bt:Override Locale="nb-no" Value="Mine møter Add-in" />
-						<bt:Override Locale="nl-nl" Value="Mijn vergaderingen Add-in" />
-						<bt:Override Locale="pt-pt" Value="As Minhas Reuniões Add-in" />
-						<bt:Override Locale="ru-ru" Value="Мои встречи Add-in" />
-						<bt:Override Locale="sv-se" Value="Mina möten Add-in" />
-						<bt:Override Locale="zh-cn" Value="我的会议 Add-in" />
-						<bt:Override Locale="pl-PL" Value="My Meetings Add-in" />
-						<bt:Override Locale="cs-CZ" Value="My Meetings Add-in" />
-					</bt:String>
-					<bt:String id="myMeetingSuperTipTitle" DefaultValue="My Meetings Add-in Preview">
-						<bt:Override Locale="da-dk" Value="Mine Møder Add-in" />
-						<bt:Override Locale="de-de" Value="Meine Besprechungen Add-in" />
-						<bt:Override Locale="es-es" Value="Mis reuniones Add-in" />
-						<bt:Override Locale="fi-fi" Value="Omat kokoukset Add-in" />
-						<bt:Override Locale="fr-fr" Value="Mes Réunions Add-in" />
-						<bt:Override Locale="it-it" Value="My Meetings Add-in" />
-						<bt:Override Locale="ja-jp" Value="マイミーティング Add-in" />
-						<bt:Override Locale="ko-kr" Value="내 모임 Add-in" />
-						<bt:Override Locale="nb-no" Value="Mine møter Add-in" />
-						<bt:Override Locale="nl-nl" Value="Mijn vergaderingen Add-in" />
-						<bt:Override Locale="pt-pt" Value="As Minhas Reuniões Add-in" />
-						<bt:Override Locale="ru-ru" Value="Мои встречи Add-in" />
-						<bt:Override Locale="sv-se" Value="Mina möten Add-in" />
-						<bt:Override Locale="zh-cn" Value="我的会议 Add-in" />
-						<bt:Override Locale="pl-PL" Value="My Meetings Add-in" />
-						<bt:Override Locale="cs-CZ" Value="My Meetings Add-in" />
-					</bt:String>
-				</bt:ShortStrings>
-				<bt:LongStrings>
-					<bt:String id="TaskpaneButton.Tooltip" DefaultValue="Opens a task pane."/>
-					<bt:String id="ActionButton.Tooltip" DefaultValue="Perform an action when clicked."/>
-					<bt:String id="apptComposeBtnToolTip"
-						DefaultValue="Resource Finder for Resource Central Allows you rapidly to locate the resource you need and book all associated services for your meeting - at a glance.">
-						<bt:Override Locale="da-dk"
-							Value="Resource Finder for Resource Central Find hurtigt den nødvendige ressource og book de services som er tilknyttet til ressourcen." />
-						<bt:Override Locale="de-de"
-							Value="ResourceFinder für Resource Central Ermöglicht das schnelle Lokalisieren der benötigten Ressourcen sowie das Buchen aller zugeordneten Dienste für Ihre Besprechung." />
-						<bt:Override Locale="es-es"
-							Value="ResourceFinder para Resource Central Acelera la búsqueda de los recursos necesarios para una reunión, así como la reserva de todos los servicios asociados." />
-						<bt:Override Locale="fi-fi"
-							Value="Resource Centralin ResourceFinderin avulla löydät tarvitsemasi resurssin nopeasti ja varaat hetkessä kaikki kokoukseen liittyvät palvelut." />
-						<bt:Override Locale="fr-fr"
-							Value="ResourceFinder for Resource Central vous permet de localiser rapidement la ressource dont vous avez besoin et de réserver, en un tour de main, tous les services associés pour votre réunion." />
-						<bt:Override Locale="it-it"
-							Value="ResourceFinder per Resource Central Consente di individuare rapidamente la risorsa desiderata e di prenotare tutti i servizi associati per la riunione, “a colpo d’occhio”." />
-						<bt:Override Locale="ja-jp"
-							Value="ResourceFinder for Resource Central を使えば、必要なリソースを素早く見つけ出して、会議に関連付けられるすべてのサービスを一目でブッキングできます。" />
-						<bt:Override Locale="ko-kr"
-							Value="Resource Central 용 리소스 검색기를 사용하면 필요한 리소스를 한 눈에 신속하게 찾아, 모임에 필요한 관련 서비스를 모두 예약할 수 있습니다." />
-						<bt:Override Locale="nb-no"
-							Value="ResourceFinder for Resource Central Lar deg raskt finne den ressursen du trenger og bestille alle forbundne tjenester for møtet - på et øyeblikk." />
-						<bt:Override Locale="nl-nl"
-							Value="ResourceFinder for Resource Central Hiermee kunt u in een handomdraai de resource vinden die u nodig hebt en alle bijbehorende diensten voor uw vergadering reserveren." />
-						<bt:Override Locale="pt-pt"
-							Value="ResourceFinder para Centro de Recursos Permite-lhe localizar rapidamente o recurso que necessita e reservar todos os serviços associados para a sua reunião - de relance." />
-						<bt:Override Locale="ru-ru"
-							Value="Поиск ресурсов для портала Resource Central позволяет быстро находить необходимые ресурсы и сразу бронировать все соответствующие услуги для вашего совещания." />
-						<bt:Override Locale="sv-se"
-							Value="ResourceFinder för Resource Central Med ResourceFinder hittar du snabbt och enkelt den resurs du behöver och kan också boka alla relaterade tjänster för ditt möte." />
-						<bt:Override Locale="zh-cn"
-							Value="资源中心的 ResourceFinder 让您能够快速找到您需要的资源，并轻松预订与会议有关的所有服务。" />
-						<bt:Override Locale="pl-PL"
-							Value="Resource Finder for Resource Central Allows you rapidly to locate the resource you need and book all associated services for your meeting - at a glance." />
-						<bt:Override Locale="cs-CZ"
-							Value="Resource Finder for Resource Central Allows you rapidly to locate the resource you need and book all associated services for your meeting - at a glance." />
-					</bt:String>
-					<bt:String id="apptComposeDesc"
-						DefaultValue="Resource Finder for Resource Central Allows you rapidly to locate the resource you need and book all associated services for your meeting - at a glance.">
-						<bt:Override Locale="da-dk"
-							Value="Resource Finder for Resource Central Find hurtigt den nødvendige ressource og book de services som er tilknyttet til ressourcen." />
-						<bt:Override Locale="de-de"
-							Value="ResourceFinder für Resource Central Ermöglicht das schnelle Lokalisieren der benötigten Ressourcen sowie das Buchen aller zugeordneten Dienste für Ihre Besprechung." />
-						<bt:Override Locale="es-es"
-							Value="ResourceFinder para Resource Central Acelera la búsqueda de los recursos necesarios para una reunión, así como la reserva de todos los servicios asociados." />
-						<bt:Override Locale="fi-fi"
-							Value="Resource Centralin ResourceFinderin avulla löydät tarvitsemasi resurssin nopeasti ja varaat hetkessä kaikki kokoukseen liittyvät palvelut." />
-						<bt:Override Locale="fr-fr"
-							Value="ResourceFinder for Resource Central vous permet de localiser rapidement la ressource dont vous avez besoin et de réserver, en un tour de main, tous les services associés pour votre réunion." />
-						<bt:Override Locale="it-it"
-							Value="ResourceFinder per Resource Central Consente di individuare rapidamente la risorsa desiderata e di prenotare tutti i servizi associati per la riunione, “a colpo d’occhio”." />
-						<bt:Override Locale="ja-jp"
-							Value="ResourceFinder for Resource Central を使えば、必要なリソースを素早く見つけ出して、会議に関連付けられるすべてのサービスを一目でブッキングできます。" />
-						<bt:Override Locale="ko-kr"
-							Value="Resource Central 용 리소스 검색기를 사용하면 필요한 리소스를 한 눈에 신속하게 찾아, 모임에 필요한 관련 서비스를 모두 예약할 수 있습니다." />
-						<bt:Override Locale="nb-no"
-							Value="ResourceFinder for Resource Central Lar deg raskt finne den ressursen du trenger og bestille alle forbundne tjenester for møtet - på et øyeblikk." />
-						<bt:Override Locale="nl-nl"
-							Value="ResourceFinder for Resource Central Hiermee kunt u in een handomdraai de resource vinden die u nodig hebt en alle bijbehorende diensten voor uw vergadering reserveren." />
-						<bt:Override Locale="pt-pt"
-							Value="ResourceFinder para Centro de Recursos Permite-lhe localizar rapidamente o recurso que necessita e reservar todos os serviços associados para a sua reunião - de relance." />
-						<bt:Override Locale="ru-ru"
-							Value="Поиск ресурсов для портала Resource Central позволяет быстро находить необходимые ресурсы и сразу бронировать все соответствующие услуги для вашего совещания." />
-						<bt:Override Locale="sv-se"
-							Value="ResourceFinder för Resource Central Med ResourceFinder hittar du snabbt och enkelt den resurs du behöver och kan också boka alla relaterade tjänster för ditt möte." />
-						<bt:Override Locale="zh-cn"
-							Value="资源中心的 ResourceFinder 让您能够快速找到您需要的资源，并轻松预订与会议有关的所有服务。" />
-						<bt:Override Locale="pl-PL"
-							Value="Resource Finder for Resource Central Allows you rapidly to locate the resource you need and book all associated services for your meeting - at a glance." />
-						<bt:Override Locale="cs-CZ"
-							Value="Resource Finder for Resource Central Allows you rapidly to locate the resource you need and book all associated services for your meeting - at a glance." />
-					</bt:String>
-					<bt:String id="residDescription"
-						DefaultValue="Resource Finder for Resource Central Allows you rapidly to locate the resource you need and book all associated services for your meeting - at a glance.">
-						<bt:Override Locale="da-dk"
-							Value="Resource Finder for Resource Central Find hurtigt den nødvendige ressource og book de services som er tilknyttet til ressourcen." />
-						<bt:Override Locale="de-de"
-							Value="ResourceFinder für Resource Central Ermöglicht das schnelle Lokalisieren der benötigten Ressourcen sowie das Buchen aller zugeordneten Dienste für Ihre Besprechung." />
-						<bt:Override Locale="es-es"
-							Value="ResourceFinder para Resource Central Acelera la búsqueda de los recursos necesarios para una reunión, así como la reserva de todos los servicios asociados." />
-						<bt:Override Locale="fi-fi"
-							Value="Resource Centralin ResourceFinderin avulla löydät tarvitsemasi resurssin nopeasti ja varaat hetkessä kaikki kokoukseen liittyvät palvelut." />
-						<bt:Override Locale="fr-fr"
-							Value="ResourceFinder for Resource Central vous permet de localiser rapidement la ressource dont vous avez besoin et de réserver, en un tour de main, tous les services associés pour votre réunion." />
-						<bt:Override Locale="it-it"
-							Value="ResourceFinder per Resource Central Consente di individuare rapidamente la risorsa desiderata e di prenotare tutti i servizi associati per la riunione, “a colpo d’occhio”." />
-						<bt:Override Locale="ja-jp"
-							Value="ResourceFinder for Resource Central を使えば、必要なリソースを素早く見つけ出して、会議に関連付けられるすべてのサービスを一目でブッキングできます。" />
-						<bt:Override Locale="ko-kr"
-							Value="Resource Central 용 리소스 검색기를 사용하면 필요한 리소스를 한 눈에 신속하게 찾아, 모임에 필요한 관련 서비스를 모두 예약할 수 있습니다." />
-						<bt:Override Locale="nb-no"
-							Value="ResourceFinder for Resource Central Lar deg raskt finne den ressursen du trenger og bestille alle forbundne tjenester for møtet - på et øyeblikk." />
-						<bt:Override Locale="nl-nl"
-							Value="ResourceFinder for Resource Central Hiermee kunt u in een handomdraai de resource vinden die u nodig hebt en alle bijbehorende diensten voor uw vergadering reserveren." />
-						<bt:Override Locale="pt-pt"
-							Value="ResourceFinder para Centro de Recursos Permite-lhe localizar rapidamente o recurso que necessita e reservar todos os serviços associados para a sua reunião - de relance." />
-						<bt:Override Locale="ru-ru"
-							Value="Поиск ресурсов для портала Resource Central позволяет быстро находить необходимые ресурсы и сразу бронировать все соответствующие услуги для вашего совещания." />
-						<bt:Override Locale="sv-se"
-							Value="ResourceFinder för Resource Central Med ResourceFinder hittar du snabbt och enkelt den resurs du behöver och kan också boka alla relaterade tjänster för ditt möte." />
-						<bt:Override Locale="zh-cn"
-							Value="资源中心的 ResourceFinder 让您能够快速找到您需要的资源，并轻松预订与会议有关的所有服务。" />
-						<bt:Override Locale="pl-PL"
-							Value="Resource Finder for Resource Central Allows you rapidly to locate the resource you need and book all associated services for your meeting - at a glance." />
-						<bt:Override Locale="cs-CZ"
-							Value="Resource Finder for Resource Central Allows you rapidly to locate the resource you need and book all associated services for your meeting - at a glance." />
-					</bt:String>
-					<bt:String id="myMeetingSuperTipDescription" DefaultValue="My Meetings Add-in Preview">
-						<bt:Override Locale="da-dk" Value="Mine Møder Add-in" />
-						<bt:Override Locale="de-de" Value="Meine Besprechungen Add-in" />
-						<bt:Override Locale="es-es" Value="Mis reuniones Add-in" />
-						<bt:Override Locale="fi-fi" Value="Omat kokoukset Add-in" />
-						<bt:Override Locale="fr-fr" Value="Mes Réunions Add-in" />
-						<bt:Override Locale="it-it" Value="My Meetings Add-in" />
-						<bt:Override Locale="ja-jp" Value="マイミーティング Add-in" />
-						<bt:Override Locale="ko-kr" Value="내 모임 Add-in" />
-						<bt:Override Locale="nb-no" Value="Mine møter Add-in" />
-						<bt:Override Locale="nl-nl" Value="Mijn vergaderingen Add-in" />
-						<bt:Override Locale="pt-pt" Value="As Minhas Reuniões Add-in" />
-						<bt:Override Locale="ru-ru" Value="Мои встречи Add-in" />
-						<bt:Override Locale="sv-se" Value="Mina möten Add-in" />
-						<bt:Override Locale="zh-cn" Value="我的会议 Add-in" />
-						<bt:Override Locale="pl-PL" Value="My Meetings Add-in" />
-						<bt:Override Locale="cs-CZ" Value="My Meetings Add-in" />
-					</bt:String>
-				</bt:LongStrings>
-			</Resources>
-		</VersionOverrides>
-	</VersionOverrides>
+<OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
+  <Id>dac64749-60d7-4579-9036-cb7308b6d444</Id>
+  <Version>1.0.0.0</Version>
+  <ProviderName>Contoso</ProviderName>
+  <DefaultLocale>en-US</DefaultLocale>
+  <DisplayName DefaultValue="Office Add-ins Outlook Smart Alerts sample"/>
+  <Description DefaultValue="Use Outlook Smart Alerts to verify that required color categories are applied to a new message or appointment before it's sent."/>
+  <IconUrl DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/outlook-check-item-categories/assets/icon-64.png"/>
+  <HighResolutionIconUrl DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/outlook-categorize-items-on-send/assets/icon-128.png"/>
+  <SupportUrl DefaultValue="https://www.contoso.com/help"/>
+  <AppDomains>
+    <AppDomain>https://www.contoso.com</AppDomain>
+  </AppDomains>
+  <Hosts>
+    <Host Name="Mailbox"/>
+  </Hosts>
+  <Requirements>
+    <Sets>
+      <Set Name="Mailbox" MinVersion="1.1"/>
+    </Sets>
+  </Requirements>
+  <FormSettings>
+    <Form xsi:type="ItemRead">
+      <DesktopSettings>
+        <SourceLocation DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/outlook-check-item-categories/src/taskpane/taskpane.html"/>
+        <RequestedHeight>250</RequestedHeight>
+      </DesktopSettings>
+    </Form>
+  </FormSettings>
+  <Permissions>ReadWriteMailbox</Permissions>
+  <Rule xsi:type="RuleCollection" Mode="Or">
+    <Rule xsi:type="ItemIs" ItemType="Message" FormType="Read"/>
+    <Rule xsi:type="ItemIs" ItemType="Appointment" FormType="Read"/>
+  </Rule>
+  <DisableEntityHighlighting>false</DisableEntityHighlighting>
+  <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides" xsi:type="VersionOverridesV1_0">
+    <VersionOverrides xmlns="http://schemas.microsoft.com/office/mailappversionoverrides/1.1" xsi:type="VersionOverridesV1_1">
+      <Requirements>
+        <bt:Sets DefaultMinVersion="1.12">
+          <bt:Set Name="Mailbox"/>
+        </bt:Sets>
+      </Requirements>
+      <Hosts>
+        <Host xsi:type="MailHost">
+          <!-- Specifies the event-based activation runtime. -->
+          <!-- For more information, see https://learn.microsoft.com/office/dev/add-ins/outlook/autolaunch. -->
+          <Runtimes>
+            <!-- HTML file that references the JavaScript event handlers. This is used by Outlook on the web. -->
+            <Runtime resid="WebViewRuntime.Url">
+              <!-- JavaScript file that contains the event handlers. This is used by Outlook on Windows. -->
+              <Override type="javascript" resid="JSRuntime.Url"/>
+            </Runtime>
+          </Runtimes>
+          <DesktopFormFactor>
+            <ExtensionPoint xsi:type="MessageComposeCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="CategoriesGroupMessageCompose">
+                  <Label resid="CategoriesGroupLabel"/>
+                  <Control xsi:type="Button" id="MessageComposeSelectButton">
+                    <Label resid="SelectButtonLabel"/>
+                    <Supertip>
+                      <Title resid="SelectButtonLabel"/>
+                      <Description resid="SelectButtonDescription"/>
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="Icon.16x16" />
+                      <bt:Image size="32" resid="Icon.32x32" />
+                      <bt:Image size="80" resid="Icon.80x80" />
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="Taskpane.Url"/>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+            <ExtensionPoint xsi:type="AppointmentOrganizerCommandSurface">
+              <OfficeTab id="TabDefault">
+                <Group id="CategoriesGroupAppointmentOrganizer">
+                  <Label resid="CategoriesGroupLabel"/>
+                  <Control xsi:type="Button" id="AppointmentOrganizerSelectButton">
+                    <Label resid="SelectButtonLabel"/>
+                    <Supertip>
+                      <Title resid="SelectButtonLabel"/>
+                      <Description resid="SelectButtonDescription"/>
+                    </Supertip>
+                    <Icon>
+                      <bt:Image size="16" resid="Icon.16x16" />
+                      <bt:Image size="32" resid="Icon.32x32" />
+                      <bt:Image size="80" resid="Icon.80x80" />
+                    </Icon>
+                    <Action xsi:type="ShowTaskpane">
+                      <SourceLocation resid="Taskpane.Url"/>
+                    </Action>
+                  </Control>
+                </Group>
+              </OfficeTab>
+            </ExtensionPoint>
+            <!-- Enables the add-in on specified events. -->
+            <ExtensionPoint xsi:type="LaunchEvent">
+              <LaunchEvents>
+                <LaunchEvent Type="OnNewMessageCompose" FunctionName="onMessageComposeHandler"/>
+                <LaunchEvent Type="OnNewAppointmentOrganizer" FunctionName="onAppointmentComposeHandler"/>
+                <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="SoftBlock"/>
+                <LaunchEvent Type="OnAppointmentSend" FunctionName="onAppointmentSendHandler" SendMode="Block"/>
+              </LaunchEvents>
+              <!-- Identifies the runtime to be used by the add-in (also referenced by the Runtime element). -->
+              <SourceLocation resid="WebViewRuntime.Url"/>
+            </ExtensionPoint>
+          </DesktopFormFactor>
+        </Host>
+      </Hosts>
+      <Resources>
+        <bt:Images>
+          <bt:Image id="Icon.16x16" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/outlook-check-item-categories/assets/icon-16.png"/>
+          <bt:Image id="Icon.32x32" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/outlook-check-item-categories/assets/icon-32.png"/>
+          <bt:Image id="Icon.80x80" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/outlook-check-item-categories/assets/icon-80.png"/>
+        </bt:Images>
+        <bt:Urls>
+          <bt:Url id="JSRuntime.Url" DefaultValue="https://raw.githubusercontent.com/nguyenanh92/commands/main/commands/commands.js"/>
+          <bt:Url id="WebViewRuntime.Url" DefaultValue="https://raw.githubusercontent.com/nguyenanh92/commands/main/commands/commands.html"/>
+          <bt:Url id="Taskpane.Url" DefaultValue="https://officedev.github.io/Office-Add-in-samples/Samples/outlook-check-item-categories/src/taskpane/taskpane.html"/>
+        </bt:Urls>
+        <bt:ShortStrings>
+          <bt:String id="CategoriesGroupLabel" DefaultValue="Office Add-ins Smart Alerts Sample"/>
+          <bt:String id="SelectButtonLabel" DefaultValue="Select categories"/>
+        </bt:ShortStrings>
+        <bt:LongStrings>
+          <bt:String id="SelectButtonDescription" DefaultValue="Opens a task pane to select and apply categories to an email or appointment."/>
+        </bt:LongStrings>
+      </Resources>
+    </VersionOverrides>
+  </VersionOverrides>
 </OfficeApp>
